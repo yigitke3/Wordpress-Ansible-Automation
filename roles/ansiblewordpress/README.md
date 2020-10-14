@@ -1,2 +1,0 @@
-# Ansible-WordPress-Role
-
