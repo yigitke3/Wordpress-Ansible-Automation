@@ -1,0 +1,5 @@
+---
+- hosts: wordpress
+  become: yes
+  roles:
+    - roles/ansiblewordpress 

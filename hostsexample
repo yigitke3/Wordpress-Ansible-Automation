@@ -1,0 +1,6 @@
+[wordpress]
+130.61.230.104
+
+[wordpress:vars]
+ansible_ssh_user=opc
+ansible_ssh_private_key_file=/home/opc/.ssh/id_rsa
