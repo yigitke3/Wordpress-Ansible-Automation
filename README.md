@@ -1,4 +1,4 @@
-Wordpress-Ansible-Automation on Ubuntu/CentOS
+Wordpress Ansible automation on Ubuntu/CentOS
 
 A compilation of Ansible roles to install a WordPress Stack on RHEL 9 / CentOS Stream 9 and Ubuntu 24.04 systems.
 
