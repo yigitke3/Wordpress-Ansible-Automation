@@ -1,0 +1,16 @@
+php_packages:
+  - php
+  - php-common
+  - php-mysqlnd
+  - php-gd
+  - php-xml
+  - php-mbstring
+  - unzip
+  - wget
+
+webserver_service: httpd
+webserver_package: httpd
+db_service: mariadb
+db_package: mariadb-server
+db_client_package: mariadb
+python_mysql_package: python3-PyMySQL

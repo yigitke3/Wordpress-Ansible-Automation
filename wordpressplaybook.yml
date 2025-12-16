@@ -1,0 +1,6 @@
+---
+- name: Deploy WordPress
+  hosts: all
+  become: yes
+  roles:
+    - role: roles/ansiblewordpress

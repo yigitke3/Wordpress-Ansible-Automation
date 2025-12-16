@@ -1,0 +1,77 @@
+---
+- name: Install MariaDB-Server
+  package:
+    name: "{{ db_package }}"
+    state: present
+  tags: database
+
+- name: Install MariaDB-client
+  package:
+    name: "{{ db_client_package }}"
+    state: present
+  tags: database
+
+- name: Install MySQL-python pkg
+  package:
+    name: "{{ python_mysql_package }}"
+    state: present
+  tags: database
+
+- name: Start and enable MariaDB-Server
+  service:
+    name: "{{ db_service }}"
+    state: started
+    enabled: yes
+  tags: database
+
+- name: Check if the root password is set
+  command: mysqladmin -u root status
+  register: root_pwd_check
+  changed_when: false
+  failed_when: false
+  tags: database
+
+- name: Set MariaDB root password for the first time
+  mysql_user:
+    name: root
+    password: "{{ mysql_root_password }}"
+    host: localhost
+    state: present
+  when: "'Access denied' not in root_pwd_check.stderr and 'Uptime' in root_pwd_check.stdout"
+  tags: database
+
+- name: Remove the anonymous user
+  mysql_user:
+    name: ''
+    login_user: root
+    login_password: "{{ mysql_root_password }}"
+    host: localhost
+    state: absent
+  tags: database
+
+- name: Remove the test database
+  mysql_db:
+    name: test
+    state: absent
+    login_user: root
+    login_password: "{{ mysql_root_password }}"
+  tags: database
+
+- name: Creating wordpress DB with the Root User
+  mysql_db:
+    name: "{{ wordpress_db }}"
+    state: present
+    login_user: root
+    login_password: "{{ mysql_root_password }}"
+  tags: database
+
+- name: Creating wordpress user and give him all privileges on wordpress db
+  mysql_user:
+    name: "{{ wordpress_dbuser }}"
+    host: localhost
+    password: "{{ wordpress_dbpass }}"
+    state: present
+    priv: "{{ wordpress_db }}.*:ALL"
+    login_user: root
+    login_password: "{{ mysql_root_password }}"
+  tags: database

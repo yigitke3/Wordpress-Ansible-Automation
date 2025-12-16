@@ -1,0 +1,17 @@
+php_packages:
+  - php
+  - php-common
+  - php-mysql
+  - php-gd
+  - php-xml
+  - php-mbstring
+  - php-xmlrpc
+  - unzip
+  - wget
+
+webserver_service: apache2
+webserver_package: apache2
+db_service: mariadb
+db_package: mariadb-server
+db_client_package: mariadb-client
+python_mysql_package: python3-mysqldb

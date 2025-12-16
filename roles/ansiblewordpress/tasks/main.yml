@@ -1,0 +1,48 @@
+---
+# Master Task for installing and configuring MariaDB, Apache & WORDPRESS
+
+- name: Load OS-specific variables
+  include_vars: "{{ item }}"
+  with_first_found:
+    - "vars/{{ ansible_os_family }}/main.yml"
+    - "vars/default.yml"
+
+- name: Setup RedHat/CentOS specific repositories
+  block:
+    - name: Installing epel-release and yum-utils
+      package:
+        name: "{{ item }}"
+        state: present
+      loop:
+        - epel-release
+        - yum-utils
+
+    # On EL9, we can rely on AppStream for PHP. 
+    # If we needed a specific version, we would manage module streams here.
+  when: ansible_os_family == "RedHat"
+  tags: php
+
+- name: Update apt cache (Debian/Ubuntu)
+  apt:
+    update_cache: yes
+  when: ansible_os_family == "Debian"
+  tags: php
+
+- name: Installing PHP and other packages
+  package:
+    name: "{{ item }}"
+    state: present
+  loop: "{{ php_packages }}"
+  tags: php
+
+- name: Installing and Configuring MariaDB
+  include_tasks: database.yml
+  tags: database
+
+- name: Installing and configuring Webserver
+  include_tasks: webserver.yml
+  tags: webserver
+
+- name: Downloading and configuring WordPress
+  include_tasks: wordpress.yml
+  tags: wordpress

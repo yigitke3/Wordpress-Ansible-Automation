@@ -1,0 +1,50 @@
+---
+- name: Download WordPress
+  get_url:
+    url: https://wordpress.org/latest.zip
+    dest: /tmp/wordpress.zip
+  tags: wordpress
+
+- name: Unzip WordPress
+  unarchive:
+    src: /tmp/wordpress.zip
+    dest: /tmp
+    remote_src: yes
+    creates: /tmp/wordpress/wp-settings.php
+  tags: wordpress
+
+- name: Copy WordPress files into apache working dir
+  shell: cp -a /tmp/wordpress/. /var/www/html/
+  args:
+    creates: /var/www/html/wp-settings.php
+  tags: wordpress
+
+- name: Copying the wordpress config.php
+  template:
+    src: wp-config.php.j2
+    dest: /var/www/html/wp-config.php
+    owner: "{{ 'apache' if ansible_os_family == 'RedHat' else 'www-data' }}"
+    group: "{{ 'apache' if ansible_os_family == 'RedHat' else 'www-data' }}"
+    mode: '0644'
+  tags: wordpress
+
+- name: Set permissions for WordPress directories
+  command: find /var/www/html -type d -exec chmod 755 {} \;
+  tags: wordpress
+
+- name: Set permissions for WordPress files
+  command: find /var/www/html -type f -exec chmod 644 {} \;
+  tags: wordpress
+
+- name: Set ownership for WordPress
+  file:
+    path: /var/www/html
+    owner: "{{ 'apache' if ansible_os_family == 'RedHat' else 'www-data' }}"
+    group: "{{ 'apache' if ansible_os_family == 'RedHat' else 'www-data' }}"
+    recurse: yes
+  tags: wordpress
+
+- name: Set SELinux context for WordPress (RedHat/CentOS)
+  command: chcon -R -t httpd_sys_rw_content_t /var/www/html
+  when: ansible_os_family == "RedHat"
+  tags: wordpress

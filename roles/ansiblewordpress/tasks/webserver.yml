@@ -1,0 +1,58 @@
+---
+- name: Install apache web server
+  package:
+    name: "{{ webserver_package }}"
+    state: present
+  tags: webserver
+
+- name: Start and enable httpd
+  service:
+    name: "{{ webserver_service }}"
+    state: started
+    enabled: yes
+  tags: webserver
+
+- name: Remove default index.html
+  file:
+    path: /var/www/html/index.html
+    state: absent
+  tags: webserver
+
+- name: Ensure firewalld is installed (RedHat/CentOS)
+  package:
+    name: firewalld
+    state: present
+  when: ansible_os_family == "RedHat"
+  tags: webserver
+
+- name: Start firewalld (RedHat/CentOS)
+  service:
+    name: firewalld
+    state: started
+    enabled: yes
+  when: ansible_os_family == "RedHat"
+  tags: webserver
+
+- name: Enable http service on the remote host (RedHat/CentOS)
+  firewalld:
+    service: http
+    permanent: true
+    state: enabled
+  when: ansible_os_family == "RedHat"
+  tags: webserver
+
+- name: Reload firewalld service (RedHat/CentOS)
+  service:
+    name: firewalld
+    state: reloaded
+  when: ansible_os_family == "RedHat"
+  tags: webserver
+
+- name: Allow HTTP on UFW (Debian/Ubuntu)
+  ufw:
+    rule: allow
+    port: '80'
+    proto: tcp
+  when: ansible_os_family == "Debian"
+  ignore_errors: yes
+  tags: webserver
