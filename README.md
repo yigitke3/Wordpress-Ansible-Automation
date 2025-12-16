@@ -1,18 +1,36 @@
-# Wordpress-Ansible-Automation
-A simple compilation of Ansible roles to install WordPress Stack on CentOs 7
+Wordpress-Ansible-Automation on Ubuntu/CentOS
 
-WordPress+Apache+PHP+MariaDB Deployment with required dependencies on CentOs7
+A compilation of Ansible roles to install a WordPress Stack on RHEL 9 / CentOS Stream 9 and Ubuntu 24.04 systems.
 
-Playbooks deploy a simple all-in-one WordPress configuration ready to be configured after the installation.
+Features
 
-Update the hosts file under /etc/ansible directory to include the names or URL's of the servers you want to deploy. There is one example hosts file in the repository.
+Multi-OS Support: Deploys WordPress + Apache + PHP + MariaDB on:
+RHEL 9 / CentOS Stream 9
+Ubuntu 24.04 LTS
+Refactored to use modern Ansible modules and syntax.
 
-Upload your private ssh key under this path: /home/opc/.ssh/"your_key" 
+Prerequisites
 
-Set the file permissions for the key to 600 with running sudo chmod 600 ~/.ssh/id_rsa
+Ansible installed on the control node.
+Target servers with SSH access and sudo privileges.
+Usage
 
-Then run the playbook with the below command:
+Configure Hosts:
+Update the hosts file (or /etc/ansible/hosts) with the IP addresses of your target servers. See hostsexample for reference.
 
-ansible-playbook wordpressplaybook.yml
+SSH Key Setup:
+Ensure your SSH key is deployed to the target servers.
 
+Run the Playbook:
+
+ansible-playbook -i <your_inventory_file> wordpressplaybook.yml
+Role Variables
+
+Variables are defined in roles/ansiblewordpress/vars/.
+
+main.yml: Common variables (Database passwords, WordPress config).
+RedHat/main.yml: RHEL/CentOS specific package names.
+Debian/main.yml: Debian/Ubuntu specific package names.
 Happy blogging.
+
+Full Changelog: https://github.com/yigitke3/Wordpress-Ansible-Automation/commits/NewRelease
