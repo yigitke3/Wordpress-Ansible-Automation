@@ -14,7 +14,7 @@
   with_items:
    - php
    - php-common
-   - php-mysql
+   - php-mysqlnd
    - php-gd
    - php-xml
    - php-mbstring
