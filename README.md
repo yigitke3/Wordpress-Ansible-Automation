@@ -17,14 +17,25 @@ A compilation of Ansible roles to install a WordPress Stack on **RHEL 9 / CentOS
 ## Usage
 
 1.  **Configure Hosts:**
-    Update the hosts file (or `/etc/ansible/hosts`) with the IP addresses of your target servers. See `hostsexample` for reference.
+    The `hostsexample` file is configured for `localhost` by default. Update it with your target server IP addresses if deploying remotely.
 
-2.  **SSH Key Setup:**
-    Ensure your SSH key is deployed to the target servers.
+    Default `hostsexample`:
+    ```ini
+    [wordpress]
+    localhost ansible_connection=local
+    ```
+
+2.  **Set Environment Variables:**
+    For security, database passwords should be set via environment variables before running the playbook.
+
+    ```bash
+    export MYSQL_ROOT_PASSWORD="your_secure_root_password"
+    export WORDPRESS_DB_PASSWORD="your_secure_db_password"
+    ```
 
 3.  **Run the Playbook:**
     ```bash
-    ansible-playbook -i <your_inventory_file> wordpressplaybook.yml
+    ansible-playbook -i hostsexample wordpressplaybook.yml
     ```
 
 ## Role Variables
