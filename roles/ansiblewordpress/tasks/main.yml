@@ -1,4 +1,16 @@
 # Master Task for installing and configuring MariaDB, Apache & WORDPRESS
+- name: Fail if mysql_root_password is not set
+  fail:
+    msg: "mysql_root_password is not set. Please set the MYSQL_ROOT_PASSWORD environment variable."
+  when: mysql_root_password | length == 0
+  tags: always
+
+- name: Fail if wordpress_dbpass is not set
+  fail:
+    msg: "wordpress_dbpass is not set. Please set the WORDPRESS_DB_PASSWORD environment variable."
+  when: wordpress_dbpass | length == 0
+  tags: always
+
 - name: Installing epel-release and yum-utils to download updated version of PHP
   yum: pkg={{ item }} state=present
   with_items:
