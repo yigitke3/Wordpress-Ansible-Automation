@@ -2,5 +2,25 @@
 - name: Deploy WordPress
   hosts: all
   become: yes
+  vars_prompt:
+    - name: mysql_root_password
+      prompt: "Enter MySQL Root Password"
+      private: yes
+    - name: wordpress_dbpass
+      prompt: "Enter WordPress Database Password"
+      private: yes
+
   roles:
     - role: roles/ansiblewordpress
+
+  post_tasks:
+    - name: Validate WordPress is accessible
+      uri:
+        url: http://localhost
+        status_code: 200,302
+        return_content: no
+      register: result
+      until: result.status == 200 or result.status == 302
+      retries: 5
+      delay: 5
+      tags: validation
