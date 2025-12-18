@@ -2,5 +2,31 @@
 - name: Deploy WordPress
   hosts: all
   become: yes
+  vars_prompt:
+    - name: mysql_root_password
+      prompt: "Enter MySQL Root Password"
+      private: yes
+    - name: wordpress_dbpass
+      prompt: "Enter WordPress Database Password"
+      private: yes
+
   roles:
     - role: roles/ansiblewordpress
+
+  post_tasks:
+    - name: Validate WordPress is accessible
+      uri:
+        url: http://localhost
+        status_code: [200, 302]
+        return_content: yes
+      register: result
+      until: result.status in [200, 302]
+      retries: 10
+      delay: 5
+      tags: validation
+
+    - name: Debug validation failure
+      debug:
+        msg: "Validation failed with status {{ result.status }}. Content: {{ result.content }}"
+      when: result.failed
+      tags: validation
