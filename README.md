@@ -15,7 +15,7 @@ A compilation of Ansible roles to install a WordPress Stack on **RHEL 9 / CentOS
 - Ansible installed on the control node.
 - Target servers with SSH access and sudo privileges.
 
-## Usage
+## Steps
 
 1.  **Configure Hosts:**
     The `hostsexample` file is configured for `localhost` by default. Update it with your target server IP addresses if deploying remotely.

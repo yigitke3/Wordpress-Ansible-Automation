@@ -22,7 +22,7 @@
       register: result
       until: result.status in [200, 302]
       retries: 10
-      delay: 5
+      delay: 15
       tags: validation
 
     - name: Debug validation failure
