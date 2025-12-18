@@ -2,5 +2,13 @@
 - name: Deploy WordPress
   hosts: all
   become: yes
+  vars_prompt:
+    - name: mysql_root_password
+      prompt: "Enter MySQL Root Password"
+      private: yes
+    - name: wordpress_dbpass
+      prompt: "Enter WordPress Database Password"
+      private: yes
+
   roles:
     - role: roles/ansiblewordpress
