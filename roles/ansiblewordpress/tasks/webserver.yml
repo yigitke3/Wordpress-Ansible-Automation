@@ -48,6 +48,13 @@
   when: ansible_os_family == "RedHat"
   tags: webserver
 
+- name: Ensure ufw is installed (Debian/Ubuntu)
+  package:
+    name: ufw
+    state: present
+  when: ansible_os_family == "Debian"
+  tags: webserver
+
 - name: Allow HTTP on UFW (Debian/Ubuntu)
   ufw:
     rule: allow
