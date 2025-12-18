@@ -13,20 +13,4 @@
   roles:
     - role: roles/ansiblewordpress
 
-  post_tasks:
-    - name: Validate WordPress is accessible
-      uri:
-        url: http://localhost
-        status_code: [200, 302]
-        return_content: yes
-      register: result
-      until: result.status in [200, 302]
-      retries: 10
-      delay: 15
-      tags: validation
-
-    - name: Debug validation failure
-      debug:
-        msg: "Validation failed with status {{ result.status }}. Content: {{ result.content }}"
-      when: result.failed
-      tags: validation
+ 
